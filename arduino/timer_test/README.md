@@ -2,7 +2,7 @@
 
 Deze test heeft als doel een functie te schrijven die afwisselend een timer van *x* en nadien van *y* doorloopt voor *n* aantal keren.
 Hiervoor wordt gebruik gemaakt van een switch functie.
-Een Resetknop plaatst alle functies teruch naar de wacht state.
+Een Resetknop plaatst alle functies terug naar de wacht state.
 
 Er wordt gebruik gemaakt van:
 - Startknop
