@@ -10,12 +10,19 @@ int servoPos;        // globale variabele, de effectieve hoek van de servo.
 
 bool servoRampActive = false;
 
+bool flankDetectieBytes[2];
+
 void servoRampFunctie(){
 
   if (!servoRampActive && servoPos==inPos){
   servoRampActive=true;
-  servoRamp.go(uitPos,10000,QUINTIC_INOUT);
+  servoRamp.go(uitPos,1000,QUINTIC_OUT);
   }
+  else if (!servoRampActive && servoPos==uitPos){
+  servoRampActive=true;
+  servoRamp.go(inPos,1000,QUINTIC_IN);
+  }
+
 
   if (servoRampActive){
   servoPos = servoRamp.update();
@@ -41,6 +48,30 @@ void setup() {
 
 void loop() {
 
-  servoRampFunctie();
+  bool startKnop = positieveFlankDetectie(digitalRead(2),flankDetectieBytes[0]);
+  if (startKnop || servoRampActive){
+    servoRampFunctie();
+  }
 
  }
+
+
+
+
+
+
+bool positieveFlankDetectie(bool Input, bool &flankDetectieByte){
+
+  if (Input && !flankDetectieByte) {
+    flankDetectieByte = true;
+    return true;
+  }
+  else if (flankDetectieByte && Input){
+    flankDetectieByte=true;
+    return false;
+  }
+  else if (!Input){
+    flankDetectieByte=false;
+    return false;
+  }
+}

@@ -20,6 +20,7 @@ int herhalingTeller = 0;
 int state = 0;
 
 void inputHandeling(){
+  
   startKnop = positieveFlankDetectie(digitalRead(STARTKNOP),flankDetectie[0]);
   resetKnop = positieveFlankDetectie(digitalRead(RESETKNOP),flankDetectie[1]);
   currTime = millis();
