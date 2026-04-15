@@ -25,10 +25,8 @@ De werking is geïmplementeerd als een state machine in C++, via de switch-instr
 De volgende versie van de pommeldoro krijgt een IMU om de hoek van de timer te meten. Wanneer de gemeten hoek niet overeenkomt met de kanteling komt er een foutmelding. 
 Ook kan de IMU gebruikt worden om de timer te starten. De wachtstate wordt dan wanneer de timer rechtop staat. Eens die plat wordt gelegd zal die naar state 1 gaan.
 
-<video width="320" height="240" controls>
-  <source src="//imgs/Pommeldoro_v1.mp4" type="video/mp4">
-</video>
-
+*De volledige demo is bekijken via deze link.*
+[![Pommeldoro demo](/imgs/Pommeldoro_v1.gif)](/imgs/Pommeldoro_v1.mp4)
 ## Functieschema
 
 
