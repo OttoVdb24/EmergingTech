@@ -32,7 +32,7 @@ Ook kan de IMU gebruikt worden om de timer te starten. De wachtstate wordt dan w
 ## Functieschema
 
 
-``` MERMAID
+``` mermaid
 stateDiagram-v2
     [*] --> WACHT : setup()
 
