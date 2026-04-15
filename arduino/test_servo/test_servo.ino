@@ -6,6 +6,11 @@ rampInt servoRamp_2;
 Servo Servo_1;  //Aanmaken van het servo object
 Servo Servo_2;
 
+int servo1_In = 0;
+int servo1_Uit= 180*0.75;
+
+int servo2_In = 0;
+int servo2_Uit= 90*0.75;
 
 bool servoRampActive_1 = false;
 bool servoRampActive_2 = false;
@@ -31,12 +36,12 @@ void setup() {
   Servo_1.attach(9);  // attaches the servo on pin 9 to the Servo object
   Servo_2.attach(10);  // attaches the servo on pin 9 to the Servo object
 
-
   servoRamp_1.setGrain(1);
   servoRamp_2.setGrain(1);
 
-  servoRamp_1.go(0, 0, LINEAR);   // initialiseer op startpositie
-  servoRamp_2.go(90, 0, LINEAR);  // initialiseer op startpositie
+  servoRamp_1.go(servo1_In, 0, LINEAR);   // initialiseer op startpositie
+  servoRamp_2.go(servo1_In, 0, LINEAR);  // initialiseer op startpositie
+  
   Servo_1.write(servoRamp_1.update());
   Servo_2.write(servoRamp_2.update());
 
@@ -48,10 +53,10 @@ void loop() {
 
   bool startKnop = positieveFlankDetectie(digitalRead(2),flankDetectieBytes[0]);
   if (startKnop || servoRampActive_1){
-    servoRampActive_1 = servoRampFunctie(Servo_1,servoRamp_1, servoRampActive_1, 0, 90); 
+    servoRampActive_1 = servoRampFunctie(Servo_1,servoRamp_1, servoRampActive_1, servo1_In, servo1_Uit); 
   }
   if (startKnop || servoRampActive_2){
-    servoRampActive_2 = servoRampFunctie(Servo_2,servoRamp_2, servoRampActive_2, 90,0); 
+    servoRampActive_2 = servoRampFunctie(Servo_2,servoRamp_2, servoRampActive_2, servo2_In, servo2_Uit); 
     Serial.println("2,Actief");
   }
  }

@@ -9,7 +9,7 @@ bool timerActive = false;             // Boolean die toont wanneer de timer acti
 
 long startTimer = 0;                 // die start moment van de timer zal capteren
 long pauzeTimerDuur = (3)*1000;     // Pauze tijd instellen in ms (ingeven in seconden, vermenigvuldigen met 1000 om naar ms te gaan)
-long blokTimerDuur = (10)*1000;      // Blok(studeer) tijd instellen  in s -> ms 
+long blokTimerDuur = (2)*1000;      // Blok(studeer) tijd instellen  in s -> ms 
 unsigned long currTime = 0;
 bool timerKlaar = false;
 long timerValue;
@@ -60,14 +60,14 @@ digitalWrite(13,LOW);
 
 
       if (timerKlaar){  //Overgangsvoorwaarde
-        state =2;       //Eenmalige actie
+        state =3;       //Eenmalige actie
 
       }
 
 
     break;
 
-    case 2: //PauzeTimer
+    case 3: //PauzeTimer
       timerKlaar = timerFunctie(resetKnop,timerActive,startTimer,pauzeTimerDuur,currTime, timerValue);
       Serial.print("Pauze!: ...");
       Serial.println((pauzeTimerDuur-timerValue)/1000);
