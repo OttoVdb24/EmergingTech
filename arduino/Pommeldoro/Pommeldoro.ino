@@ -14,40 +14,47 @@ unsigned long currTime = 0;
 bool timerKlaar = false;
 long timerValue;
 
-int aantalHerhalingen = 5;
-int herhalingTeller = 0;
+int aantalHerhalingen = 5;        // Aantal herhalingen de pommeldoro zal doen vooraleer hij terug naar wacht zal gaan
+int herhalingTeller = 0;          // Counter om aantal herhalingen bij te houden
 
-int state = 0;
-bool bewegingKlaar;
+int state = 0;                    // Switch state 
+
+bool bewegingKlaar;               // bit die hoog wordt geplaatst wanneer de servobeweging klaar is. 
 
 
 // Alles voor het servo gedeelte
 #include <Ramp.h>
 #include <Servo.h>
 
-rampInt servoRamp_1;   // Servo ramp object aanmaken
+rampInt servoRamp_1;              // Servo ramp object aanmaken
 rampInt servoRamp_2;
-Servo Servo_1;  //Aanmaken van het servo object
+Servo Servo_1;                    //Aanmaken van het servo object
 Servo Servo_2;
 
-bool servoRampActive_1 = false;
+bool servoRampActive_1 = false;       // bit om aan te geven dat de ramp actief is. (om eerste cyclus te bepalen)
 bool servoRampActive_2 = false;
-float servoOffset = 0.75;
-float servo1Uit = 90 * servoOffset;
+float servoOffset = 0.75;             // Hoek offset om ervoor te zorgen dat 180° effectief 180° draait.
+
+float servo1Uit = 90 * servoOffset;    // Hoeken waar de servo naartoe zal rampen
 float servo1In = 0;
 float servo1Neutr = 45*servoOffset;
 
-float servo2Uit = 180*0.75-servo1Uit;
+float servo2Uit = 90*0.75-servo1Uit;   
 float servo2In = 180*0.75-servo1In;
-float servo2Neutr = 180*0.75- servo1Neutr; 
+float servo2Neutr = 45*0.75- servo1Neutr; 
 
-void inputHandeling(){
+/*
+Functie om alle inputs in de arduino in te lezen. Waaronder de knoppen met positieve flank detectie en de huidige tijd in miliseconden vast leggen aan het begin van de loop.*/
+void inputHandeling(){                  
   
   startKnop = positieveFlankDetectie(digitalRead(STARTKNOP),flankDetectie[0]);
   resetKnop = positieveFlankDetectie(digitalRead(RESETKNOP),flankDetectie[1]);
   currTime = millis();
+
 }
 
+/*
+Alle setup van de servo's. Servo koppelen aan hun respectievelijke PWM pin. De ramp objecten fijn instellen en dan de servo naar hun in positie sturen door een korte ramp van 0sec.*/
 void servoSetup(){
   Servo_1.attach(9);  // attaches the servo on pin 9 to the Servo object
   Servo_2.attach(10);  // attaches the servo on pin 9 to the Servo object
@@ -69,16 +76,19 @@ void setup() {
 Serial.begin(9600);
 pinMode(13,OUTPUT);
 servoSetup();
-
 }
 
+
 void loop() {
+// Alle inputs binnen trekken  
 inputHandeling();
+// Status lamp laag zetten aan het begin van de loop.
 digitalWrite(13,LOW);
 
-
+  // De single state code. Telkens een bepaalde status zal actief zijn
   switch (state){
-    case 0:
+    case 0: // Wacht status
+
       if (!bewegingKlaar){
      bewegingKlaar =servoRampFunctie(Servo_1,servoRamp_1,servoRampActive_1,servo1Neutr);
       servoRampFunctie(Servo_2,servoRamp_2,servoRampActive_2,servo2Neutr);
@@ -96,8 +106,8 @@ digitalWrite(13,LOW);
 
     case 1: // Servo beweging Links kantelen
         if (!bewegingKlaar){
-     bewegingKlaar =servoRampFunctie(Servo_1,servoRamp_1,servoRampActive_1,servo1In);
-           servoRampFunctie(Servo_2,servoRamp_2,servoRampActive_2,servo2Uit);
+     bewegingKlaar =servoRampFunctie(Servo_1,servoRamp_1,servoRampActive_1,servo1In);   // Servo 1 aansturen. 
+                    servoRampFunctie(Servo_2,servoRamp_2,servoRampActive_2,servo2Uit);
 
       }
     else{
@@ -151,15 +161,6 @@ digitalWrite(13,LOW);
       }
 
     break;
-
-
-
-
-  
-
-  
-  
-  
   }
 
 
@@ -219,25 +220,24 @@ bool positieveFlankDetectie(bool Input, bool &flankDetectieByte){
   }
 }
 
-bool servoRampFunctie(Servo &myservo, rampInt &servoRamp, bool &servoRampActive, int uitPos) {
+bool servoRampFunctie(Servo &myservo, rampInt &servoRamp, bool &servoRampActive, int Pos) {
 
-  if (servoRamp.isFinished() && servoRampActive) {
+  if (servoRamp.isFinished() && servoRampActive) {  // Servo beweging is klaar want finished maar de rampActive staat nog hoog, dus eerste loop na klaar.
     servoRampActive = false;
     digitalWrite(13, LOW);
-    return true;  // Functie doen stoppen.
+    return true;                             // Functie doen stoppen.
   }
 
 
-  if (!servoRamp.isRunning()) { // Start van de actie motorbeweging , checkt of die uit of in moet bewegen
+  if (!servoRamp.isRunning()) {                   // Start van de actie motorbeweging , start een ramp naar de gevraagde Pos.
     servoRampActive = true;
-    servoRamp.go(uitPos, 3000, QUADRATIC_IN);
+    servoRamp.go(Pos, 3000, QUADRATIC_IN);
   }
+
     // De postitie van de servi veranderen wanneer de Ramp actief is. + controle led doen branden.
     myservo.write(servoRamp.update());
     digitalWrite(13, HIGH);
     return false;
-
-
 
 }
 
