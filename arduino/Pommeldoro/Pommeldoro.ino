@@ -74,7 +74,7 @@ void BLE_setup(){
     while (1);      // Laat de code stoppen wanneer de BLE niet aanwezig is of niet werkt
   }
 
-  BLE.setLocalName("Arduino-Sensor");
+  BLE.setLocalName("Arduino-Pommeldoro");
   BLE.setAdvertisedService(sensorService);
   sensorService.addCharacteristic(sensorChar);
   BLE.addService(sensorService);
