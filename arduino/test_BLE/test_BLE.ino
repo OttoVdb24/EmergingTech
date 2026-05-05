@@ -32,22 +32,11 @@ void loop() {
 
 
 
-void BLE_send( int value){
-    BLEDevice central = BLE.central();
+void BLE_send(int value) {
+  BLE.poll();  // BLE events verwerken
 
-  if (central) {
-    Serial.print("Verbonden met: ");
-    Serial.println(central.address());
-
-    while (central.connected()) {
-
-      sensorChar.writeValue(value);
-      Serial.print("Verstuurd: ");
-      Serial.println(value);
-
-      delay(500);
-    }
-
-    Serial.println("Verbinding verbroken.");
+  BLEDevice central = BLE.central();
+  if (central && central.connected()) {
+    sensorChar.writeValue((float)value);
   }
 }
