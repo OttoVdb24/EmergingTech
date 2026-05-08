@@ -175,6 +175,8 @@ void loop() {
   if (resetKnop){                                             // Wanneer de resetknop wordt geduuwd zal de loop stoppen en naar wachtstate resetten.
         state=0;                                               // Terug naar wacht state
       herhalingTeller=0;                                       // Aantal herhaling resetten om volgende keer opnieuw van 0 te beginnen.
+      bewegingKlaar=false;
+      
   }
   BLE_send(state);
 
